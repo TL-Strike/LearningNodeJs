@@ -1,5 +1,5 @@
 'use strict';
-
+require('dotenv').config(); //load các biến môi trường từ file .env vào process.env
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');

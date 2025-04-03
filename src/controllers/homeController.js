@@ -1,6 +1,18 @@
 
-let getHomePage = (req, res) => {
-    return res.render('homePage.ejs') //trả về một chuỗi 'Hello World' khi truy cập vào đường dẫn '/'
+import db from '../models/index'; //import db từ file models/index.js
+
+let getHomePage = async (req, res) => {
+    try {
+        let data = await db.User.findAll(); //lấy tất cả dữ liệu từ bảng user trong cơ sở dữ liệu
+        console.log('--------------------------')
+        console.log(data)
+        console.log('--------------------------')
+        return res.render('homePage.ejs', {
+            data: JSON.stringify(data) //truyền dữ liệu vào view homePage.ejs
+        }); //trả về một chuỗi 'Hello World' khi truy cập vào đường dẫn '/'
+    }catch(e) {
+        console.log(e) //nếu có lỗi thì sẽ in ra lỗi đó
+    }    
 }
 
 let getAboutPage = (req, res) => {
