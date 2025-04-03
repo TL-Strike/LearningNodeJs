@@ -15,6 +15,7 @@ const {
         }
     };
     Specialty.init({
+        name: DataTypes.STRING,
         description: DataTypes.TEXT,
         image: DataTypes.STRING
     }, {
