@@ -27,7 +27,7 @@ let getCRUD = (req, res) => {
 let postCRUD = async (req, res) => {
     let message = await CRUDService.createNewUser(req.body); //gọi hàm createNewUser trong file CRUDService.js và truyền vào dữ liệu của form
     console.log(message) 
-    return res.render('post crud from server') //trả về một chuỗi 'post crud from server' khi truy cập vào đường dẫn '/post-crud'
+    return res.send('post crud from server') //trả về một chuỗi 'post crud from server' khi truy cập vào đường dẫn '/post-crud'
 }
 
 let displayCRUD = async (req, res) => {
@@ -64,6 +64,21 @@ let putCRUD = async (req, res) => {
     }) 
 }
 
+let deleteCRUD = async (req, res) => {
+    let id = req.query.id;
+    if(id) {
+        let allUsers = await CRUDService.deleteUserById(id); //gọi hàm deleteUserById trong file CRUDService.js để xóa người dùng theo id
+        return res.send('Delete user succeed!') //trả về một chuỗi 'Delete user succeed!' khi xóa người dùng thành công
+        // return res.render('displayCRUD.ejs', {
+        //     dataTable: allUsers //truyền dữ liệu vào view displayCRUD.ejs
+        // })
+    }
+    else {
+        return res.send('User not found!') //trả về một chuỗi 'get edit crud' khi truy cập vào đường dẫn '/edit-crud'
+    }
+    
+}
+
 // để sử dụng được hàm getHomePage này thì cần phải export nó ra ngoài để có thể sử dụng được ở file khác
 module.exports = {
     getHomePage: getHomePage,
@@ -72,5 +87,6 @@ module.exports = {
     postCRUD: postCRUD,
     displayCRUD: displayCRUD,
     getEditCRUD: getEditCRUD,
-    putCRUD: putCRUD
+    putCRUD: putCRUD,
+    deleteCRUD: deleteCRUD
 }

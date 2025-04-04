@@ -90,9 +90,32 @@ let updateUserData = (data) => {
     })
 }
 
+let deleteUserById = (userId) => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let user = await db.User.findOne({
+                where: {id : userId}
+            })
+            if(user) {
+                await db.User.destroy({
+                    where: { id : userId}
+                })
+                let allUsers = await db.User.findAll(); //lấy tất cả người dùng trong cơ sở dữ liệu
+                resolve(allUsers); //trả về tất cả người dùng trong cơ sở dữ liệu
+            }
+            else {
+                resolve(); //trả về một đối tượng rỗng nếu không tìm thấy người dùng    
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
     createNewUser: createNewUser,
     getAllUser: getAllUser,
     getUserInforById: getUserInforById,
-    updateUserData: updateUserData
+    updateUserData: updateUserData,
+    deleteUserById: deleteUserById
 }
