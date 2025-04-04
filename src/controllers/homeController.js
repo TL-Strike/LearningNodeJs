@@ -1,5 +1,6 @@
 
 import db from '../models/index'; //import db từ file models/index.js
+import CRUDService from '../services/CRUDService';
 
 let getHomePage = async (req, res) => {
     try {
@@ -19,8 +20,19 @@ let getAboutPage = (req, res) => {
     return res.render('test/about.ejs')
 }
 
+let getCRUD = (req, res) => {
+    return res.render('crud.ejs')//trả về một chuỗi 'CRUD page' khi truy cập vào đường dẫn '/crud'
+}
+
+let postCRUD = async (req, res) => {
+    let message = await CRUDService.createNewUser(req.body); //gọi hàm createNewUser trong file CRUDService.js và truyền vào dữ liệu của form
+    console.log(message) 
+    return res.send('post crud from server') //trả về một chuỗi 'post crud from server' khi truy cập vào đường dẫn '/post-crud'
+}
 // để sử dụng được hàm getHomePage này thì cần phải export nó ra ngoài để có thể sử dụng được ở file khác
 module.exports = {
     getHomePage: getHomePage,
-    getAboutPage: getAboutPage
+    getAboutPage: getAboutPage,
+    getCRUD: getCRUD,
+    postCRUD: postCRUD
 }
