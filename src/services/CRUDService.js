@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import db from "../models/index"; //import db từ models/index.js
+import { raw } from "body-parser";
 const salt = bcrypt.genSaltSync(10);
 
 let createNewUser = async (data) => {
@@ -47,8 +48,51 @@ let getAllUser = () => {
         }
     })
 }
+let getUserInforById = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = await db.User.findOne({
+                where: { id: userId},
+                raw: false //lấy dữ liệu thô từ cơ sở dữ liệu
+            })
+            if(user) {
+                resolve(user) //trả về người dùng theo id
+            } else {
+                resolve({}) //trả về một đối tượng rỗng nếu không tìm thấy người dùng
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+let updateUserData = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = await db.User.findOne({
+                where: { id: data.id}
+            })
+            if(user){
+                user.firstName = data.firstName;
+                user.lastName = data.lastName;
+                user.address = data.address;
+
+                await user.save(); //lưu lại thông tin người dùng đã được cập nhật
+                let allUsers = await db.User.findAll(); //lấy tất cả người dùng trong cơ sở dữ liệu
+                resolve(allUsers); //trả về một đối tượng rỗng nếu không tìm thấy người dùng
+            }
+            else {
+                resolve(); //trả về một đối tượng rỗng nếu không tìm thấy người dùng
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 module.exports = {
     createNewUser: createNewUser,
-    getAllUser: getAllUser
+    getAllUser: getAllUser,
+    getUserInforById: getUserInforById,
+    updateUserData: updateUserData
 }

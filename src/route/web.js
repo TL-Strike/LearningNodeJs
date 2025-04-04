@@ -10,6 +10,8 @@ let initWebRoutes = (app) => { //đường dẫn này sẽ được sử dụng 
     router.get('/crud', homeController.getCRUD);
     router.post('/post-crud', homeController.postCRUD); 
     router.get('/get-crud', homeController.displayCRUD);
+    router.get('/edit-crud', homeController.getEditCRUD); //trả về một chuỗi 'edit crud' khi truy cập vào đường dẫn '/edit-crud'
+    router.post('/put-crud', homeController.putCRUD); //trả về một chuỗi 'put crud' khi truy cập vào đường dẫn '/put-crud'
     //restAPI: 
     // muốn lấy dữ liệu thì sử dụng phương thức get
     // muốn tạo dữ liệu thì sử dụng phương thức post

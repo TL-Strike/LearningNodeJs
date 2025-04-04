@@ -42,11 +42,35 @@ let displayCRUD = async (req, res) => {
     }) //trả về một chuỗi 'display crud' khi truy cập vào đường dẫn '/get-crud'
 }
 
+let getEditCRUD = async (req, res) => {
+    let userId = req.query.id; //lấy id từ query string
+    if(userId){
+        let userData = await CRUDService.getUserInforById(userId); //gọi hàm getUserInforById trong file CRUDService.js để lấy thông tin người dùng theo id
+        
+        return res.render('editCRUD.ejs', {
+            user: userData //truyền dữ liệu vào view editCRUD.ejs
+        })
+    }
+    else {
+        return res.send('Users not found!') //trả về một chuỗi 'get edit crud' khi truy cập vào đường dẫn '/edit-crud'
+    }
+}
+
+let putCRUD = async (req, res) => {
+    let data = req.body; 
+    let allUsers = await CRUDService.updateUserData(data); //gọi hàm updateUserData trong file CRUDService.js để cập nhật thông tin người dùng
+    return res.render('displayCRUD.ejs', {
+        dataTable: allUsers //truyền dữ liệu vào view displayCRUD.ejs
+    }) 
+}
+
 // để sử dụng được hàm getHomePage này thì cần phải export nó ra ngoài để có thể sử dụng được ở file khác
 module.exports = {
     getHomePage: getHomePage,
     getAboutPage: getAboutPage,
     getCRUD: getCRUD,
     postCRUD: postCRUD,
-    displayCRUD: displayCRUD
+    displayCRUD: displayCRUD,
+    getEditCRUD: getEditCRUD,
+    putCRUD: putCRUD
 }
