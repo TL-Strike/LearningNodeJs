@@ -27,12 +27,26 @@ let getCRUD = (req, res) => {
 let postCRUD = async (req, res) => {
     let message = await CRUDService.createNewUser(req.body); //gọi hàm createNewUser trong file CRUDService.js và truyền vào dữ liệu của form
     console.log(message) 
-    return res.send('post crud from server') //trả về một chuỗi 'post crud from server' khi truy cập vào đường dẫn '/post-crud'
+    return res.render('post crud from server') //trả về một chuỗi 'post crud from server' khi truy cập vào đường dẫn '/post-crud'
 }
+
+let displayCRUD = async (req, res) => {
+    let data = await CRUDService.getAllUser({
+        raw: true,
+    }); //gọi hàm getAllUser trong file CRUDService.js để lấy tất cả người dùng
+    console.log('--------------------------')
+    console.log(data) //in ra dữ liệu của người dùng
+    console.log('--------------------------')
+    return res.render('displayCRUD.ejs', {
+        dataTable: data //truyền dữ liệu vào view displayCRUD.ejs
+    }) //trả về một chuỗi 'display crud' khi truy cập vào đường dẫn '/get-crud'
+}
+
 // để sử dụng được hàm getHomePage này thì cần phải export nó ra ngoài để có thể sử dụng được ở file khác
 module.exports = {
     getHomePage: getHomePage,
     getAboutPage: getAboutPage,
     getCRUD: getCRUD,
-    postCRUD: postCRUD
+    postCRUD: postCRUD,
+    displayCRUD: displayCRUD
 }

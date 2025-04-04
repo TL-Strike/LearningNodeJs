@@ -9,6 +9,7 @@ let initWebRoutes = (app) => { //đường dẫn này sẽ được sử dụng 
     router.get('/about', homeController.getAboutPage); 
     router.get('/crud', homeController.getCRUD);
     router.post('/post-crud', homeController.postCRUD); 
+    router.get('/get-crud', homeController.displayCRUD);
     //restAPI: 
     // muốn lấy dữ liệu thì sử dụng phương thức get
     // muốn tạo dữ liệu thì sử dụng phương thức post

@@ -37,6 +37,18 @@ let hashUserPassword = (password) => {
     })
 }
 
+let getAllUser = () => {
+    return new Promise((resolve, eject) => {
+        try {
+            let users = db.User.findAll();
+            resolve(users) //trả về tất cả người dùng trong cơ sở dữ liệu
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
-    createNewUser: createNewUser
+    createNewUser: createNewUser,
+    getAllUser: getAllUser
 }
