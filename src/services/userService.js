@@ -36,7 +36,7 @@ let handleUserLogin = (email, password) => {
                 else {
                     //user not exist
                     userData.errCode = 2; //định nghĩa mã lỗi
-                    userData.errMessage = 'Your email is not exist in our system. Please try other email!'
+                    userData.errMessage = 'User not found'
                     // resolve(userData)
                 }
             }

@@ -3,11 +3,15 @@ import bodyParser from 'body-parser';
 import viewEngine from './config/viewEngine.js';
 import initWebRoutes from './route/web.js';
 import connectDB from './config/connectDB.js'; //import kết nối database
+import cors from 'cors';
+
 require('dotenv').config(); //sử dụng dotenv để lấy các biến môi trường từ file .env
 
 
 let app = express(); //tạo một ứng dụng express mới
 // config app 
+app.use(cors({ credentials: true, origin: true }));
+
 
 app.use(bodyParser.json()); //cấu hình body-parser để parse dữ liệu json từ client gửi lên
 app.use(bodyParser.urlencoded({ extended: true })); //cấu hình body-parser để parse dữ liệu urlencoded từ client gửi lên
