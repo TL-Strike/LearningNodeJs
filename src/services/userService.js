@@ -120,26 +120,27 @@ let createNewUser = (data) => {
             if(check === true) {
                 resolve({
                     errCode: 1,
-                    message: 'Your email is exist. Please try another email.'
+                    errMessage: 'Your email is exist. Please try another email.'
                 })
             }
-
-            let hashPasswordFromBcrypt = await hashUserPassword (data.password); //mã hóa mật khẩu bằng hàm hashUserPassword
-            await db.User.create({
-                email: data.email,
-                password: hashPasswordFromBcrypt,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                address: data.address,
-                phonenumber: data.phonenumber,
-                gender: data.gender === '1' ? true : false, //true or false
-                roleId: data.roleId
-            })
-            // console.log(data)
-            resolve({
-                errCode: 0,
-                message: 'OK'
-            }) 
+            else {
+                let hashPasswordFromBcrypt = await hashUserPassword (data.password); //mã hóa mật khẩu bằng hàm hashUserPassword
+                await db.User.create({
+                    email: data.email,
+                    password: hashPasswordFromBcrypt,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    address: data.address,
+                    phonenumber: data.phonenumber,
+                    gender: data.gender === '1' ? true : false, //true or false
+                    roleId: data.roleId
+                })
+                // console.log(data)
+                resolve({
+                    errCode: 0,
+                    errMessage: 'OK'
+                }) 
+            }
         } catch (e) {
             reject(e);
         }
