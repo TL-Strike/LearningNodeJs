@@ -2,6 +2,21 @@
 import db from '../models/index'; //import db để kết nối với database
 import bcrypt from 'bcryptjs';
 
+const salt = bcrypt.genSaltSync(10);
+
+let hashUserPassword = (password) => {
+    // resolve: nếu mọi việc thành công thì sẽ gọi hàm này
+    // reject: nếu có lỗi thì sẽ gọi hàm này
+    return new Promise(async (resolve, reject) => {
+        try {
+            let hashPassword = await bcrypt.hashSync(password, salt);
+            resolve(hashPassword) //trả về mật khẩu đã được mã hóa
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 let handleUserLogin = (email, password) => {
     return new Promise (async (resolve, reject) => {
         try {
@@ -97,8 +112,111 @@ let getAllUsers = (userId) => {
     })
 }
 
+let createNewUser = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // check email exist
+            let check = await checkUserEmail(data.email);
+            if(check === true) {
+                resolve({
+                    errCode: 1,
+                    message: 'Your email is exist. Please try another email.'
+                })
+            }
+
+            let hashPasswordFromBcrypt = await hashUserPassword (data.password); //mã hóa mật khẩu bằng hàm hashUserPassword
+            await db.User.create({
+                email: data.email,
+                password: hashPasswordFromBcrypt,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                address: data.address,
+                phonenumber: data.phonenumber,
+                gender: data.gender === '1' ? true : false, //true or false
+                roleId: data.roleId
+            })
+            // console.log(data)
+            resolve({
+                errCode: 0,
+                message: 'OK'
+            }) 
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let deleteUser = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user =  await db.User.findOne({
+                where: {id: userId}
+            })
+            if(!user) {
+                resolve({
+                    errCode: 2,
+                    errMessage: "The user isn't exist."
+                })
+            }
+            // await user.destroy();
+            await db.User.destroy({
+                where: {id: userId}
+            })
+            resolve({
+                errCode: 0,
+                errMessage: "The user is deleted."
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+let updateUser = (data) => {
+    return new Promise (async (resolve, reject) => {
+        try {
+            if(!data) {
+                resolve({
+                    errCode: 2,
+                    errMessage: 'Missing required parameters'
+                })
+            }
+            let user = await db.User.findOne({
+                where: { id: data.id},
+                raw: false
+            })
+            if(user){
+                user.firstName = data.firstName;
+                user.lastName = data.lastName;
+                user.address = data.address;
+                await user.save();
+                // await db.User.save({
+                //     firstName: data.firstName,
+                //     lastName: data.lastName,
+                //     address: data.address
+                // }); //lưu lại thông tin người dùng đã được cập nhật
+                resolve({
+                    errCode: 0,
+                    errMessage: 'Update user succeeds'
+                }); //trả về một đối tượng rỗng nếu không tìm thấy người dùng
+            }
+            else {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'User not found!'
+                }); //trả về một đối tượng rỗng nếu không tìm thấy người dùng
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
     handleUserLogin: handleUserLogin,
     checkUserEmail: checkUserEmail,
-    getAllUsers: getAllUsers
+    getAllUsers: getAllUsers,
+    createNewUser: createNewUser,
+    updateUser: updateUser,
+    deleteUser: deleteUser
 }

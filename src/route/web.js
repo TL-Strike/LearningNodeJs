@@ -14,9 +14,13 @@ let initWebRoutes = (app) => { //đường dẫn này sẽ được sử dụng 
     router.get('/edit-crud', homeController.getEditCRUD); //trả về một chuỗi 'edit crud' khi truy cập vào đường dẫn '/edit-crud'
     router.post('/put-crud', homeController.putCRUD); //trả về một chuỗi 'put crud' khi truy cập vào đường dẫn '/put-crud'
     router.get('/delete-crud', homeController.deleteCRUD); //trả về một chuỗi 'delete crud' khi truy cập vào đường dẫn '/delete-crud'
+    
     router.post('/api/login', userController.handleLogin);
     router.get('/api/get-all-users', userController.handleGetAllUsers);
-    
+    router.post('/api/create-new-user', userController.handleCreateNewUser);
+    router.put('/api/edit-user', userController.handleEditUser);
+    router.delete('/api/delete-user', userController.handleDeleteUser);
+
     //restAPI: 
     // muốn lấy dữ liệu thì sử dụng phương thức get
     // muốn tạo dữ liệu thì sử dụng phương thức post
